@@ -1,0 +1,112 @@
+---
+title: "HW08"
+author: "黃榆珮"
+date: "2019年4月8日"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+rm(list=ls())
+#
+con = gzcon(url('http://www.systematicportfolio.com/sit.gz', 'rb'))
+source(con)
+close(con)
+
+load.packages('quantmod')
+etf4.all<-readRDS("D:/hw0408/HW0408/etf4_xts_all")
+head(etf4.all)
+str(etf4.all)
+etf4.all.1<-etf4.all[complete.cases(etf4.all),]
+head(etf4.all.1)
+tail(etf4.all.1)
+```
+
+```{r}
+data1<-new.env()
+data1$prices<-etf4.all.1$`0050`
+prices<-data1$prices
+prices
+
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+```
+
+# buy and hold for 0050
+```{r}
+bt.prep(data1, align='keep.all')
+names(data1)
+data1$dates
+data1$prices
+data1$prices<-prices
+
+class(data1$dates)
+data1$weight
+data1$execution.price = prices
+#data1$execution.price = data1$prices = etf4.all.1$`0050`
+data1$weight[] = 1
+buy.hold.0050 <- bt.run.share(data1, clean.signal=F, trade.summary = TRUE)
+buy.hold.0050 <-bt.run(data1)
+```
+
+# sma 200 for 0050
+```{r}
+prices<-data1$prices
+sma200<-SMA(prices, 200)
+head(sma200, 201)
+data1$weight[] <- iif(prices >= sma200, 1, 0)
+sma200.0050 <- bt.run(data1, trade.summary=T)
+```
+
+# sma 50 for 0050
+```{r}
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+data1$weight[] <- iif(prices >= sma50, 1, 0)
+sma50.0050 <- bt.run(data1, trade.summary=T)
+```
+
+# sma 50 for 005, short allowed
+```{r}
+data1$weight[] <- iif(prices >= sma50, 1, -1)
+sma50.0050.short <- bt.run(data1, trade.summary=T)
+```
+
+# summary of investment
+```{r}
+models<-list("SMA50"= sma50.0050, 
+             "SMA200"= sma200.0050, 
+             "SMA50_short" = sma50.0050.short, 
+             "BH 0050" = buy.hold.0050)
+strategy.performance.snapshoot(models, T)
+strategy.performance.snapshoot(models, control=list(comparison=T), sort.performance=T)
+plotbt.strategy.sidebyside(models, return.table=T)
+```
+
+```{r}
+library(ggplot2)
+all.0050<-merge.xts(sma50.0050$equity, 
+            sma50.0050.short$equity, 
+            sma200.0050$equity, 
+            buy.hold.0050$equity)
+colnames(all.0050)<-c("sma50", "sma50 short", "sma200", "BH")
+head(all.0050)
+all.0050.long<-fortify(all.0050, melt=T)
+head(all.0050.long)
+```
+
+```{r}
+title = "Cumulative returns of 0050s"
+p = ggplot(all.0050.long, aes(x = Index, y = Value)) +
+  geom_line(aes(linetype = Series, color = Series)) +
+  #geom_point(aes(shape = Series))+
+  xlab("year") + ylab("cumulative returns")+
+  ggtitle(title)
+p
+```
+
+```{r}
+```

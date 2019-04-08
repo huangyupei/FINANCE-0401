@@ -235,7 +235,7 @@ data2$weight[] <- iif(prices >= sma50, 1, -1)
 sma50.0056.short <- bt.run(data2, trade.summary=T)
 # summary of investment
 models<-list("SMA50"= sma50.0056, 
-             
+             "SMA200"= sma200.0056,
              "SMA50_short" = sma50.0056.short, 
              "BH 0056" = buy.hold.0056)
 strategy.performance.snapshoot(models, T)
@@ -245,9 +245,9 @@ plotbt.strategy.sidebyside(models, return.table=T)
 library(ggplot2)
 all.0056<-merge.xts(sma50.0056$equity, 
                     sma50.0056.short$equity, 
-                    
+                    sma200.0056$equity, 
                     buy.hold.0056$equity)
-colnames(all.0056)<-c("sma50", "sma50 short", "BH")
+colnames(all.0056)<-c("sma50", "sma50 short","sma200", "BH")
 head(all.0056)
 all.0056.long<-fortify(all.0056, melt=T)
 head(all.0056.long)

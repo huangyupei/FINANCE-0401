@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r include=FALSE}
 rm(list=ls())
 #
 con = gzcon(url('http://www.systematicportfolio.com/sit.gz', 'rb'))
@@ -17,7 +17,7 @@ source(con)
 close(con)
 
 load.packages('quantmod')
-etf4.all<-readRDS("D:/hw0408/HW0408/etf4_xts_all")
+etf4.all<-readRDS("c:/hw0408/HW0408-/etf4_xts_all")
 head(etf4.all)
 str(etf4.all)
 etf4.all.1<-etf4.all[complete.cases(etf4.all),]
@@ -25,7 +25,8 @@ head(etf4.all.1)
 tail(etf4.all.1)
 ```
 
-```{r}
+# 0050
+```{r results='hide'}
 data1<-new.env()
 data1$prices<-etf4.all.1$`0050`
 prices<-data1$prices
@@ -35,8 +36,8 @@ sma50<-SMA(prices, 50)
 head(sma50, 51)
 ```
 
-# buy and hold for 0050
-```{r}
+- **buy and hold for 0050**
+```{r results='hide'}
 bt.prep(data1, align='keep.all')
 names(data1)
 data1$dates
@@ -52,8 +53,8 @@ buy.hold.0050 <- bt.run.share(data1, clean.signal=F, trade.summary = TRUE)
 buy.hold.0050 <-bt.run(data1)
 ```
 
-# sma 200 for 0050
-```{r}
+- **sma 200 for 0050**
+```{r results='hide'}
 prices<-data1$prices
 sma200<-SMA(prices, 200)
 head(sma200, 201)
@@ -61,21 +62,21 @@ data1$weight[] <- iif(prices >= sma200, 1, 0)
 sma200.0050 <- bt.run(data1, trade.summary=T)
 ```
 
-# sma 50 for 0050
-```{r}
+- **sma 50 for 0050**
+```{r results='hide'}
 sma50<-SMA(prices, 50)
 head(sma50, 51)
 data1$weight[] <- iif(prices >= sma50, 1, 0)
 sma50.0050 <- bt.run(data1, trade.summary=T)
 ```
 
+```{r include=FALSE}
 # sma 50 for 005, short allowed
-```{r}
 data1$weight[] <- iif(prices >= sma50, 1, -1)
 sma50.0050.short <- bt.run(data1, trade.summary=T)
 ```
 
-# summary of investment
+- **summary of investment**
 ```{r}
 models<-list("SMA50"= sma50.0050, 
              "SMA200"= sma200.0050, 
@@ -86,7 +87,7 @@ strategy.performance.snapshoot(models, control=list(comparison=T), sort.performa
 plotbt.strategy.sidebyside(models, return.table=T)
 ```
 
-```{r}
+```{r results='hide'}
 library(ggplot2)
 all.0050<-merge.xts(sma50.0050$equity, 
             sma50.0050.short$equity, 
@@ -107,9 +108,9 @@ p = ggplot(all.0050.long, aes(x = Index, y = Value)) +
   ggtitle(title)
 p
 ```
-#-----------------------------------------------------------------------------------------------
-#0056
-```{r}
+
+# 0056
+```{r results='hide'}
 data2<-new.env()
 data2$prices<-etf4.all.1$`0056`
 prices<-data2$prices
@@ -119,8 +120,8 @@ sma50<-SMA(prices, 50)
 head(sma50, 51)
 ```
 
-# buy and hold for 0056
-```{r}
+- **buy and hold for 0056**
+```{r results='hide'}
 bt.prep(data2, align='keep.all')
 names(data2)
 data2$dates
@@ -136,8 +137,8 @@ buy.hold.0056 <- bt.run.share(data2, clean.signal=F, trade.summary = TRUE)
 buy.hold.0056 <-bt.run(data2)
 ```
 
-# sma 200 for 0056
-```{r}
+- **sma 200 for 0056**
+```{r results='hide'}
 prices<-data2$prices
 sma200<-SMA(prices, 200)
 head(sma200, 201)
@@ -145,19 +146,22 @@ data2$weight[] <- iif(prices >= sma200, 1, 0)
 sma200.0056 <- bt.run(data2, trade.summary=T)
 ```
 
-# sma 50 for 0056
-```{r}
+- **sma 50 for 0056**
+```{r results='hide'}
 sma50<-SMA(prices, 50)
 head(sma50, 51)
 data2$weight[] <- iif(prices >= sma50, 1, 0)
 sma50.0056 <- bt.run(data2, trade.summary=T)
 ```
 
-```{r}
+```{r include=FALSE}
 # sma 50 for 0056, short allowed
 data2$weight[] <- iif(prices >= sma50, 1, -1)
 sma50.0056.short <- bt.run(data2, trade.summary=T)
-# summary of investment
+```
+
+- **summary of investment**
+```{r}
 models<-list("SMA50"= sma50.0056, 
              "SMA200"= sma200.0056,
              "SMA50_short" = sma50.0056.short, 
@@ -167,7 +171,7 @@ strategy.performance.snapshoot(models, control=list(comparison=T), sort.performa
 plotbt.strategy.sidebyside(models, return.table=T)
 ```
 
-```{r}
+```{r results='hide'}
 library(ggplot2)
 all.0056<-merge.xts(sma50.0056$equity, 
                     sma50.0056.short$equity, 
@@ -189,8 +193,8 @@ p = ggplot(all.0056.long, aes(x = Index, y = Value)) +
 p
 ```
 
-#006205
-```{r}
+# 006205
+```{r results='hide'}
 data3<-new.env()
 data3$prices<-etf4.all.1$`006205`
 prices<-data3$prices
@@ -200,8 +204,8 @@ sma50<-SMA(prices, 50)
 head(sma50, 51)
 ```
 
-# buy and hold for 006205
-```{r}
+- **buy and hold for 006205**
+```{r results='hide'}
 bt.prep(data3, align='keep.all')
 names(data3)
 data3$dates
@@ -217,8 +221,8 @@ buy.hold.006205 <- bt.run.share(data3, clean.signal=F, trade.summary = TRUE)
 buy.hold.006205 <-bt.run(data3)
 ```
 
-# sma 200 for 006205
-```{r}
+- **sma 200 for 006205**
+```{r results='hide'}
 prices<-data3$prices
 sma200<-SMA(prices, 200)
 head(sma200, 201)
@@ -226,16 +230,22 @@ data3$weight[] <- iif(prices >= sma200, 1, 0)
 sma200.006205 <- bt.run(data3, trade.summary=T)
 ```
 
-# sma 50 for 006205
-```{r}
+- **sma 50 for 006205**
+```{r results='hide'}
 sma50<-SMA(prices, 50)
 head(sma50, 51)
 data3$weight[] <- iif(prices >= sma50, 1, 0)
 sma50.006205 <- bt.run(data3, trade.summary=T)
+```
+
+```{r include=FALSE}
 # sma 50 for 006205, short allowed
 data3$weight[] <- iif(prices >= sma50, 1, -1)
 sma50.006205.short <- bt.run(data3, trade.summary=T)
-# summary of investment
+```
+
+- **summary of investment**
+```{r}
 models<-list("SMA50"= sma50.006205, 
              "SMA200"= sma200.006205,
              "SMA50_short" = sma50.006205.short, 
@@ -245,8 +255,7 @@ strategy.performance.snapshoot(models, control=list(comparison=T), sort.performa
 plotbt.strategy.sidebyside(models, return.table=T)
 ```
 
-
-```{r}
+```{r results='hide'}
 library(ggplot2)
 all.006205<-merge.xts(sma50.006205$equity, 
                     sma50.006205.short$equity, 
@@ -268,8 +277,8 @@ p = ggplot(all.006205.long, aes(x = Index, y = Value)) +
 p
 ```
 
-#00646
-```{r}
+# 00646
+```{r results='hide'}
 data4<-new.env()
 data4$prices<-etf4.all.1$`00646`
 prices<-data4$prices
@@ -279,8 +288,8 @@ sma50<-SMA(prices, 50)
 head(sma50, 51)
 ```
 
-# buy and hold for 00646
-```{r}
+- **buy and hold for 00646**
+```{r results='hide'}
 bt.prep(data4, align='keep.all')
 names(data4)
 data4$dates
@@ -296,8 +305,8 @@ buy.hold.00646 <- bt.run.share(data4, clean.signal=F, trade.summary = TRUE)
 buy.hold.00646 <-bt.run(data4)
 ```
 
-# sma 200 for 00646
-```{r}
+- **sma 200 for 00646**
+```{r results='hide'}
 prices<-data4$prices
 sma200<-SMA(prices, 200)
 head(sma200, 201)
@@ -305,16 +314,22 @@ data4$weight[] <- iif(prices >= sma200, 1, 0)
 sma200.00646 <- bt.run(data4, trade.summary=T)
 ```
 
-# sma 50 for 00646
-```{r}
+- **sma 50 for 00646**
+```{r results='hide'}
 sma50<-SMA(prices, 50)
 head(sma50, 51)
 data4$weight[] <- iif(prices >= sma50, 1, 0)
 sma50.00646 <- bt.run(data4, trade.summary=T)
+```
+
+```{r include=FALSE}
 # sma 50 for 00646, short allowed
 data4$weight[] <- iif(prices >= sma50, 1, -1)
 sma50.00646.short <- bt.run(data4, trade.summary=T)
-# summary of investment
+```
+
+- **summary of investment**
+```{r}
 models<-list("SMA50"= sma50.00646, 
              "SMA200"= sma200.00646,
              "SMA50_short" = sma50.00646.short, 
@@ -324,7 +339,7 @@ strategy.performance.snapshoot(models, control=list(comparison=T), sort.performa
 plotbt.strategy.sidebyside(models, return.table=T)
 ```
 
-```{r}
+```{r results='hide'}
 library(ggplot2)
 all.00646<-merge.xts(sma50.00646$equity, 
                       sma50.00646.short$equity, 
@@ -344,5 +359,4 @@ p = ggplot(all.00646.long, aes(x = Index, y = Value)) +
   xlab("year") + ylab("cumulative returns")+
   ggtitle(title)
 p
-
 ```

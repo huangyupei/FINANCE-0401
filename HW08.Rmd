@@ -107,6 +107,242 @@ p = ggplot(all.0050.long, aes(x = Index, y = Value)) +
   ggtitle(title)
 p
 ```
+#-----------------------------------------------------------------------------------------------
+#0056
+```{r}
+data2<-new.env()
+data2$prices<-etf4.all.1$`0056`
+prices<-data2$prices
+prices
+
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+```
+
+# buy and hold for 0056
+```{r}
+bt.prep(data2, align='keep.all')
+names(data2)
+data2$dates
+data2$prices
+data2$prices<-prices
+
+class(data2$dates)
+data2$weight
+data2$execution.price = prices
+
+data2$weight[] = 1
+buy.hold.0056 <- bt.run.share(data2, clean.signal=F, trade.summary = TRUE)
+buy.hold.0056 <-bt.run(data2)
+```
+
+# sma 200 for 0056
+```{r}
+prices<-data2$prices
+sma200<-SMA(prices, 200)
+head(sma200, 201)
+data2$weight[] <- iif(prices >= sma200, 1, 0)
+sma200.0056 <- bt.run(data2, trade.summary=T)
+```
+
+# sma 50 for 0056
+```{r}
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+data2$weight[] <- iif(prices >= sma50, 1, 0)
+sma50.0056 <- bt.run(data2, trade.summary=T)
+```
 
 ```{r}
+# sma 50 for 0056, short allowed
+data2$weight[] <- iif(prices >= sma50, 1, -1)
+sma50.0056.short <- bt.run(data2, trade.summary=T)
+# summary of investment
+models<-list("SMA50"= sma50.0056, 
+             "SMA200"= sma200.0056,
+             "SMA50_short" = sma50.0056.short, 
+             "BH 0056" = buy.hold.0056)
+strategy.performance.snapshoot(models, T)
+strategy.performance.snapshoot(models, control=list(comparison=T), sort.performance=T)
+plotbt.strategy.sidebyside(models, return.table=T)
+```
+
+```{r}
+library(ggplot2)
+all.0056<-merge.xts(sma50.0056$equity, 
+                    sma50.0056.short$equity, 
+                    sma200.0056$equity, 
+                    buy.hold.0056$equity)
+colnames(all.0056)<-c("sma50", "sma50 short","sma200", "BH")
+head(all.0056)
+all.0056.long<-fortify(all.0056, melt=T)
+head(all.0056.long)
+```
+
+```{r}
+title = "Cumulative returns of 0056s"
+p = ggplot(all.0056.long, aes(x = Index, y = Value)) +
+  geom_line(aes(linetype = Series, color = Series)) +
+  #geom_point(aes(shape = Series))+
+  xlab("year") + ylab("cumulative returns")+
+  ggtitle(title)
+p
+```
+
+#006205
+```{r}
+data3<-new.env()
+data3$prices<-etf4.all.1$`006205`
+prices<-data3$prices
+prices
+
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+```
+
+# buy and hold for 006205
+```{r}
+bt.prep(data3, align='keep.all')
+names(data3)
+data3$dates
+data3$prices
+data3$prices<-prices
+
+class(data3$dates)
+data3$weight
+data3$execution.price = prices
+
+data3$weight[] = 1
+buy.hold.006205 <- bt.run.share(data3, clean.signal=F, trade.summary = TRUE)
+buy.hold.006205 <-bt.run(data3)
+```
+
+# sma 200 for 006205
+```{r}
+prices<-data3$prices
+sma200<-SMA(prices, 200)
+head(sma200, 201)
+data3$weight[] <- iif(prices >= sma200, 1, 0)
+sma200.006205 <- bt.run(data3, trade.summary=T)
+```
+
+# sma 50 for 006205
+```{r}
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+data3$weight[] <- iif(prices >= sma50, 1, 0)
+sma50.006205 <- bt.run(data3, trade.summary=T)
+# sma 50 for 006205, short allowed
+data3$weight[] <- iif(prices >= sma50, 1, -1)
+sma50.006205.short <- bt.run(data3, trade.summary=T)
+# summary of investment
+models<-list("SMA50"= sma50.006205, 
+             "SMA200"= sma200.006205,
+             "SMA50_short" = sma50.006205.short, 
+             "BH 006205" = buy.hold.006205)
+strategy.performance.snapshoot(models, T)
+strategy.performance.snapshoot(models, control=list(comparison=T), sort.performance=T)
+plotbt.strategy.sidebyside(models, return.table=T)
+```
+
+
+```{r}
+library(ggplot2)
+all.006205<-merge.xts(sma50.006205$equity, 
+                    sma50.006205.short$equity, 
+                    sma200.006205$equity,
+                    buy.hold.006205$equity)
+colnames(all.006205)<-c("sma50", "sma50 short", "sma200", "BH")
+head(all.006205)
+all.006205.long<-fortify(all.006205, melt=T)
+head(all.006205.long)
+```
+
+```{r}
+title = "Cumulative returns of 006205s"
+p = ggplot(all.006205.long, aes(x = Index, y = Value)) +
+  geom_line(aes(linetype = Series, color = Series)) +
+  #geom_point(aes(shape = Series))+
+  xlab("year") + ylab("cumulative returns")+
+  ggtitle(title)
+p
+```
+
+#00646
+```{r}
+data4<-new.env()
+data4$prices<-etf4.all.1$`00646`
+prices<-data4$prices
+prices
+
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+```
+
+# buy and hold for 00646
+```{r}
+bt.prep(data4, align='keep.all')
+names(data4)
+data4$dates
+data4$prices
+data4$prices<-prices
+
+class(data4$dates)
+data4$weight
+data4$execution.price = prices
+
+data4$weight[] = 1
+buy.hold.00646 <- bt.run.share(data4, clean.signal=F, trade.summary = TRUE)
+buy.hold.00646 <-bt.run(data4)
+```
+
+# sma 200 for 00646
+```{r}
+prices<-data4$prices
+sma200<-SMA(prices, 200)
+head(sma200, 201)
+data4$weight[] <- iif(prices >= sma200, 1, 0)
+sma200.00646 <- bt.run(data4, trade.summary=T)
+```
+
+# sma 50 for 00646
+```{r}
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+data4$weight[] <- iif(prices >= sma50, 1, 0)
+sma50.00646 <- bt.run(data4, trade.summary=T)
+# sma 50 for 00646, short allowed
+data4$weight[] <- iif(prices >= sma50, 1, -1)
+sma50.00646.short <- bt.run(data4, trade.summary=T)
+# summary of investment
+models<-list("SMA50"= sma50.00646, 
+             "SMA200"= sma200.00646,
+             "SMA50_short" = sma50.00646.short, 
+             "BH 00646" = buy.hold.00646)
+strategy.performance.snapshoot(models, T)
+strategy.performance.snapshoot(models, control=list(comparison=T), sort.performance=T)
+plotbt.strategy.sidebyside(models, return.table=T)
+```
+
+```{r}
+library(ggplot2)
+all.00646<-merge.xts(sma50.00646$equity, 
+                      sma50.00646.short$equity, 
+                      sma200.00646$equity,
+                      buy.hold.00646$equity)
+colnames(all.006205)<-c("sma50", "sma50 short", "sma200", "BH")
+head(all.00646)
+all.00646.long<-fortify(all.00646, melt=T)
+head(all.00646.long)
+```
+
+```{r}
+title = "Cumulative returns of 00646s"
+p = ggplot(all.00646.long, aes(x = Index, y = Value)) +
+  geom_line(aes(linetype = Series, color = Series)) +
+  #geom_point(aes(shape = Series))+
+  xlab("year") + ylab("cumulative returns")+
+  ggtitle(title)
+p
+
 ```
